@@ -9,21 +9,101 @@ const initialState = {
   allComlumns: [],
   allData: [],
   users: {
-    "14-02-12": {
+    "2024-04-07": {
       1: {
-        name: "Sundar ban",
-        seatNumber: 1,
-        birth: "Lower",
-        email: "test@example.com",
-        dateOfTravelling: "14-02-12",
-        status: "booked",
+        name: "test",
+        email: "test@test.com",
+      },
+      2: {
+        name: "test",
+        email: "test@test.com",
+      },
+      3: {
+        name: "test",
+        email: "test@test.com",
+      },
+      4: {
+        name: "test",
+        email: "test@test.com",
+      },
+    },
+    "2024-04-09": {
+      1: {
+        name: "test",
+        email: "test@test.com",
+      },
+      2: {
+        name: "test",
+        email: "test@test.com",
+      },
+      3: {
+        name: "test",
+        email: "test@test.com",
+      },
+      4: {
+        name: "test",
+        email: "test@test.com",
+      },
+    },
+    "2024-04-10": {
+      1: {
+        name: "test",
+        email: "test@test.com",
+      },
+      2: {
+        name: "test",
+        email: "test@test.com",
+      },
+      3: {
+        name: "test",
+        email: "test@test.com",
+      },
+      4: {
+        name: "test",
+        email: "test@test.com",
+      },
+    },
+    "2024-04-11": {
+      1: {
+        name: "test",
+        email: "test@test.com",
+      },
+      2: {
+        name: "test",
+        email: "test@test.com",
+      },
+      3: {
+        name: "test",
+        email: "test@test.com",
+      },
+      4: {
+        name: "test",
+        email: "test@test.com",
+      },
+    },
+    "2024-04-12": {
+      1: {
+        name: "test",
+        email: "test@test.com",
+      },
+      2: {
+        name: "test",
+        email: "test@test.com",
+      },
+      3: {
+        name: "test",
+        email: "test@test.com",
+      },
+      4: {
+        name: "test",
+        email: "test@test.com",
       },
     },
   },
 };
 
 const userSlice = createSlice({
-  name: "product",
+  name: "user",
   initialState,
   reducers: {
     reserveSeat: (state, action) => {
@@ -51,17 +131,39 @@ const userSlice = createSlice({
         };
       }
     },
+    removeBooking: (state, action) => {
+      delete state.users[action.payload.dateOfBooking][
+        action.payload.seatNumber
+      ];
+      if (Object.keys(state.users[action.payload.dateOfBooking]).length === 0)
+        delete state.users[action.payload.dateOfBooking];
+    },
+    updateBooking: (state, action) => {
+      const { dateOfBooking, seatNumber, name, email } = action.payload;
+      state.users[dateOfBooking] = {
+        ...state.users[dateOfBooking],
+        [seatNumber]: {
+          name,
+          email,
+        },
+      };
+      if (action.payload.oldDateOfBooking) {
+        delete state.users[action.payload.oldDateOfBooking][seatNumber];
+        if (Object.keys(state.users[action.payload.dateOfBooking]).length === 0)
+          delete state.users[action.payload.dateOfBooking];
+      }
+    },
     getAllBookedDates: (state) => {
       state.allDates = Object.keys(state.users);
     },
     getAllReservedSeatesOfDate: (state, action) => {
       const { dateOfTravelling } = action.payload;
       if (state.users.hasOwnProperty(dateOfTravelling))
-      state.allReserveseatsOnDate = Object.keys(
-        state.users?.[dateOfTravelling]
-      ).map(key => +key);
+        state.allReserveseatsOnDate = Object.keys(
+          state.users?.[dateOfTravelling]
+        ).map((key) => +key);
       else {
-        state.allReserveseatsOnDate = []
+        state.allReserveseatsOnDate = [];
       }
     },
     getColumns: (state) => {
