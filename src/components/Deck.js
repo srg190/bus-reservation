@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+
 import steeringWheelImage from "../assets/images/steering-wheel.png";
 import { userActions } from "../redux/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 
 function BusSeatReservation({ isLowerDeck = true }) {
-  const { setTempData } = userActions;
+  const { setTempData, getAllReservedSeatesOfDate } = userActions;
   const dispatch = useAppDispatch();
-  const {tempSeat} = useAppSelector((state) => state.user);
+  const { tempSeat, allReserveseatsOnDate, tempDate, users } = useAppSelector(
+    (state) => state.user
+  );
 
   const lowerDeckSeats = Array.from(
     { length: 18 },
@@ -14,6 +17,7 @@ function BusSeatReservation({ isLowerDeck = true }) {
   );
 
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [reservedSeats, setReservedSeats] = useState([]);
 
   const toggleSeatSelection = (seatNumber) => {
     if (selectedSeats.includes(seatNumber)) {
@@ -26,10 +30,18 @@ function BusSeatReservation({ isLowerDeck = true }) {
   };
 
   useEffect(() => {
-    if (!tempSeat){
+    if (tempDate) {
+      dispatch(getAllReservedSeatesOfDate({ dateOfTravelling: tempDate }));
+      setReservedSeats(allReserveseatsOnDate);
+    }
+  }, [dispatch, tempDate, JSON.stringify(allReserveseatsOnDate)]);
+
+  useEffect(() => {
+    if (!tempSeat) {
       setSelectedSeats([]);
     }
   }, [dispatch, tempSeat]);
+  console.log(reservedSeats, users, "allReserveseatsOnDate");
 
   return (
     <div className="flex justify-center items-center h-50 w-50">
@@ -57,8 +69,10 @@ function BusSeatReservation({ isLowerDeck = true }) {
               {lowerDeckSeats.slice(0, 12).map((seat, index) => (
                 <div
                   key={seat}
-                  className={`w-14 lg:w-24 sm:w-[4rem] h-12 flex items-center justify-center  mr-[.4rem] mb-3 border border-secondary-300 cursor-pointer ${
-                    selectedSeats.includes(seat)
+                  className={`w-14 lg:w-24 sm:w-[4rem] h-12 flex items-center justify-center mr-[.4rem] mb-3 border border-secondary-300 cursor-pointer ${
+                    reservedSeats.includes(seat)
+                      ? "bg-gray text-graytext cursor-not-allowed"
+                      : selectedSeats.includes(seat)
                       ? "bg-primary text-white"
                       : "bg-white hover:bg-primary hover:text-white"
                   }`}
@@ -75,8 +89,10 @@ function BusSeatReservation({ isLowerDeck = true }) {
               {lowerDeckSeats.slice(12).map((seat, index) => (
                 <div
                   key={seat}
-                  className={`w-14 lg:w-24 sm:w-[4rem] h-12 flex items-center justify-center mr-[.4rem] mt-5 border border-secondary-300 cursor-pointer ${
-                    selectedSeats.includes(seat)
+                  className={`w-14 lg:w-24 sm:w-[4rem] h-12 flex items-center justify-center mr-[.4rem] mb-3 border border-secondary-300 cursor-pointer ${
+                    reservedSeats.includes(seat)
+                      ? "bg-gray text-graytext cursor-not-allowed"
+                      : selectedSeats.includes(seat)
                       ? "bg-primary text-white"
                       : "bg-white hover:bg-primary hover:text-white"
                   }`}
@@ -96,7 +112,9 @@ function BusSeatReservation({ isLowerDeck = true }) {
               <p
                 onClick={() => toggleSeatSelection(isLowerDeck ? 19 : 39)}
                 className={`h-12 w-12 border border-secondary-300 flex items-center justify-center ${
-                  selectedSeats.includes(isLowerDeck ? 19 : 39)
+                  reservedSeats.includes(isLowerDeck ? 19 : 39)
+                    ? "bg-gray text-graytext cursor-not-allowed"
+                    : selectedSeats.includes(isLowerDeck ? 19 : 39)
                     ? "bg-primary text-white"
                     : "bg-white hover:bg-primary hover:text-white"
                 }`}
@@ -106,7 +124,9 @@ function BusSeatReservation({ isLowerDeck = true }) {
               <p
                 onClick={() => toggleSeatSelection(isLowerDeck ? 20 : 40)}
                 className={`h-12 w-12 border border-secondary-300 flex items-center justify-center ${
-                  selectedSeats.includes(isLowerDeck ? 20 : 40)
+                  reservedSeats.includes(isLowerDeck ? 20 : 40)
+                    ? "bg-gray text-graytext cursor-not-allowed"
+                    : selectedSeats.includes(isLowerDeck ? 20 : 40)
                     ? "bg-primary text-white"
                     : "bg-white hover:bg-primary hover:text-white"
                 }`}

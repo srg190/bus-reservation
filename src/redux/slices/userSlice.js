@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  email: "",
-  password: "",
   tempDate: "",
   tempSeat: "",
   allDates: [],
   allReserveseatsOnDate: [],
+  changedId: 0,
   allComlumns: [],
+  allData: [],
   users: {
     "14-02-12": {
       1: {
@@ -26,13 +26,6 @@ const userSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    login: (state, action) => {
-      state.email = action.payload.email;
-      state.password = action.payload.password;
-    },
-    logout: (state) => {
-      state = {};
-    },
     reserveSeat: (state, action) => {
       const { name, seatNumber, email, dateOfTravelling } = action.payload;
       if (state.users[dateOfTravelling]) {
@@ -58,20 +51,18 @@ const userSlice = createSlice({
         };
       }
     },
-    isReserved: (state, action) => {
-      const { seatNumber, dateOfTravelling } = action.payload;
-      if (state.users?.[dateOfTravelling]?.[seatNumber]?.status === "booked") {
-        return true;
-      }
-      return false;
-    },
     getAllBookedDates: (state) => {
       state.allDates = Object.keys(state.users);
     },
     getAllReservedSeatesOfDate: (state, action) => {
+      const { dateOfTravelling } = action.payload;
+      if (state.users.hasOwnProperty(dateOfTravelling))
       state.allReserveseatsOnDate = Object.keys(
-        state.users?.[action.payload.dateOfTravelling]
-      );
+        state.users?.[dateOfTravelling]
+      ).map(key => +key);
+      else {
+        state.allReserveseatsOnDate = []
+      }
     },
     getColumns: (state) => {
       state.allComlumns = [
@@ -83,7 +74,7 @@ const userSlice = createSlice({
       ];
     },
     getData: (state) => {
-      return Object.keys(state.users)
+      state.allData = Object.keys(state.users)
         .map((seatNumber, idx) => {
           const userData = state.users[seatNumber];
           return Object.keys(userData).map((dataKey) => {

@@ -5,10 +5,9 @@ import { useActionData } from "react-router-dom";
 import { userActions } from "../redux/slices/userSlice";
 
 const BusReservationForm = () => {
-  const { tempDate, tempSeat, allReserveseatsOnDate, users } = useAppSelector(
-    (state) => state.user
-  );
-  const { clearTempData, reserveSeat, getAllBookedDates } = userActions;
+  const { tempDate, tempSeat, users } = useAppSelector((state) => state.user);
+  const { clearTempData, reserveSeat, getAllReservedSeatesOfDate } =
+    userActions;
   const dispatch = useAppDispatch();
 
   const [isSelected, setIsSelected] = useState(false);
@@ -32,7 +31,7 @@ const BusReservationForm = () => {
         dateOfTravelling: formData.date,
       })
     );
-    console.log(users, "users")
+    dispatch(getAllReservedSeatesOfDate({ dateOfTravelling: "" }));
   };
 
   const handleChange = (event) => {
