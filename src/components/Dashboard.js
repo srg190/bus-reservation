@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import "../table.css";
 
@@ -9,10 +8,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { columns } from "../table/Columns";
-import Navbar from "./Navbar";
+import { useAppSelector } from "../redux/store";
 
 export const Dashboard = () => {
-  const bookingData = useSelector((state) => state.userReducer.users);
+  const { users: bookingData } = useAppSelector((state) => state.user);
+  // const bookingData = useSelector((state) => state.user.users);
   const dashboard = Object.entries(bookingData).flatMap(
     ([dateOfBooking, seats]) => {
       return Object.entries(seats).map(([seatNumber, data]) => {
@@ -79,7 +79,6 @@ export const Dashboard = () => {
 
   return (
     <>
-      <Navbar />
       <article className="table-container">
         <table>
           <thead>

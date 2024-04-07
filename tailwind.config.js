@@ -21,7 +21,8 @@ module.exports = {
       black: '#000',
       white: '#fff',
       gray: 'rgb(209 213 219)',
-      graytext: 'rgb(75 85 99)'
+      graytext: 'rgb(75 85 99)',
+      error: 'rgb(239 68 68)'
     },
     fontFamily: {
       sans: ['Graphik', 'sans-serif'],

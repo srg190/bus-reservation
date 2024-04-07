@@ -1,17 +1,26 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function DropdownMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const [currSelect, setCurrSelect] = useState('Dashboard')
   const navItems = [
     {
-        name: 'Seat Booking',
-        route: '/seat-booking'
+      name: 'Dashboard',
+      route: '/'
     },
     {
-        name: 'Dashboard',
-        route: '/dashboard'
-    }
+        name: 'Booking',
+        route: '/seat-booking'
+    },
   ]
+  
+  const handleRoute =(route)=> {
+    setIsOpen(false);
+    setCurrSelect(route.name)
+    navigate(route.route);
+  }
 //   const navItems = ["Hello", "World"];
 
   return (
@@ -20,7 +29,7 @@ function DropdownMenu() {
         onClick={() => setIsOpen(!isOpen)}
         className="inline-flex justify-center w-full rounded-lg border-none bg-white text-black px-8 py-2 focus:outline-none"
       >
-        Dropdown
+        {currSelect}
         <svg
           className="-mr-1 ml-2 mt-1 h-5 w-5"
           xmlns="http://www.w3.org/2000/svg"
@@ -49,6 +58,7 @@ function DropdownMenu() {
         >
           {navItems.map((item, index) => (
             <li
+              onClick={() => handleRoute(item)}
               key={index}
               className="text-black hover:bg-primary hover:text-white px-2 py-2 cursor-pointer"
             >

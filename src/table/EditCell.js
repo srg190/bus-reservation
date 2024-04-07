@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-labels */
-/* eslint-disable no-label-var */
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../redux/slices/userSlice";
+import { useAppSelector } from "../redux/store";
 
 let rowData;
 
@@ -13,7 +11,8 @@ export const EditCell = ({ row, table }) => {
   const [dateError, setDateError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const dispatch = useDispatch();
-  const bookingData = useSelector((state) => state.userReducer.users);
+  const { users: bookingData } = useAppSelector((state) => state.user);
+  // const bookingData = useSelector((state) => state.userReducer.users);
   const meta = table.options.meta;
   const setEditedRows = (e) => {
     rowData = row.original;
@@ -149,8 +148,8 @@ export const EditCell = ({ row, table }) => {
           </div>
         )}
       </div>
-      {dateError && <p>Already Booked</p>}
-      {emailError && <p>Email invalid</p>}
+      {dateError && <p className="!text-error text-xs">*Already Booked</p>}
+      {emailError && <p className="!text-error text-xs">*Email invalid</p>}
     </>
   );
 };

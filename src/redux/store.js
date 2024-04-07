@@ -18,7 +18,7 @@ const userPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  userReducer,
+  user: userReducer,
   //   notes: persistReducer(userPersistConfig, notesReducer),
 });
 

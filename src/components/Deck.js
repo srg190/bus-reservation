@@ -33,6 +33,8 @@ function BusSeatReservation({ isLowerDeck = true }) {
     if (tempDate) {
       dispatch(getAllReservedSeatesOfDate({ dateOfTravelling: tempDate }));
       setReservedSeats(allReserveseatsOnDate);
+    } else {
+      setReservedSeats([])
     }
   }, [dispatch, tempDate, JSON.stringify(allReserveseatsOnDate)]);
 
@@ -71,12 +73,16 @@ function BusSeatReservation({ isLowerDeck = true }) {
                   key={seat}
                   className={`w-14 lg:w-24 sm:w-[4rem] h-12 flex items-center justify-center mr-[.4rem] mb-3 border border-secondary-300 cursor-pointer ${
                     reservedSeats.includes(seat)
-                      ? "bg-gray text-graytext cursor-not-allowed"
+                      ? "bg-gray text-graytext !cursor-not-allowed"
                       : selectedSeats.includes(seat)
                       ? "bg-primary text-white"
                       : "bg-white hover:bg-primary hover:text-white"
                   }`}
-                  onClick={() => toggleSeatSelection(seat)}
+                  onClick={() =>
+                    reservedSeats.includes(seat)
+                      ? null
+                      : toggleSeatSelection(seat)
+                  }
                 >
                   <div className="w-100 flex justify-center items-center">
                     <p className="w-50 text-secondary">{seat}</p>
@@ -91,12 +97,16 @@ function BusSeatReservation({ isLowerDeck = true }) {
                   key={seat}
                   className={`w-14 lg:w-24 sm:w-[4rem] h-12 flex items-center justify-center mr-[.4rem] mb-3 border border-secondary-300 cursor-pointer ${
                     reservedSeats.includes(seat)
-                      ? "bg-gray text-graytext cursor-not-allowed"
+                      ? "bg-gray text-graytext !cursor-not-allowed"
                       : selectedSeats.includes(seat)
                       ? "bg-primary text-white"
                       : "bg-white hover:bg-primary hover:text-white"
                   }`}
-                  onClick={() => toggleSeatSelection(seat)}
+                  onClick={() =>
+                    reservedSeats.includes(seat)
+                      ? null
+                      : toggleSeatSelection(seat)
+                  }
                 >
                   <div className="w-100 flex justify-center items-center">
                     {seat}
@@ -110,10 +120,14 @@ function BusSeatReservation({ isLowerDeck = true }) {
           >
             <div className="flex flex-col items-center">
               <p
-                onClick={() => toggleSeatSelection(isLowerDeck ? 19 : 39)}
+                onClick={() =>
+                  reservedSeats.includes(isLowerDeck ? 19 : 39)
+                    ? null
+                    : toggleSeatSelection(isLowerDeck ? 19 : 39)
+                }
                 className={`h-12 w-12 border border-secondary-300 flex items-center justify-center ${
                   reservedSeats.includes(isLowerDeck ? 19 : 39)
-                    ? "bg-gray text-graytext cursor-not-allowed"
+                    ? "bg-gray text-graytext !cursor-not-allowed"
                     : selectedSeats.includes(isLowerDeck ? 19 : 39)
                     ? "bg-primary text-white"
                     : "bg-white hover:bg-primary hover:text-white"
@@ -122,10 +136,14 @@ function BusSeatReservation({ isLowerDeck = true }) {
                 {isLowerDeck ? 19 : 39}
               </p>
               <p
-                onClick={() => toggleSeatSelection(isLowerDeck ? 20 : 40)}
+                onClick={() =>
+                  reservedSeats.includes(isLowerDeck ? 20 : 40)
+                    ? null
+                    : toggleSeatSelection(isLowerDeck ? 20 : 40)
+                }
                 className={`h-12 w-12 border border-secondary-300 flex items-center justify-center ${
                   reservedSeats.includes(isLowerDeck ? 20 : 40)
-                    ? "bg-gray text-graytext cursor-not-allowed"
+                    ? "bg-gray text-graytext !cursor-not-allowed"
                     : selectedSeats.includes(isLowerDeck ? 20 : 40)
                     ? "bg-primary text-white"
                     : "bg-white hover:bg-primary hover:text-white"

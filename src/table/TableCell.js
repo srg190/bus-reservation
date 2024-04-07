@@ -56,7 +56,7 @@ export const TableCell = ({ getValue, row, column, table }) => {
           type={columnMeta?.type || "text"}
           min={minDate}
         />
-        {error && <span>Please enter a valid email</span>}
+        {error && <p className="!text-error text-xs">*Please enter a valid email</p>}
       </>
     );
   }
