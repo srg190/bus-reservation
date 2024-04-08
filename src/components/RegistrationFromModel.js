@@ -60,7 +60,6 @@ const BusReservationForm = () => {
       setIsSelected(false);
     }
   }, [tempDate, tempSeat, dispatch]);
-  // console.log(allReserveseatsOnDate, "getAllBookedDates");
   return (
     <div>
       {isSelected && (

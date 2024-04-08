@@ -21,7 +21,7 @@ function BusSeatReservation({ isLowerDeck = true }) {
 
   const toggleSeatSelection = (seatNumber) => {
     if (selectedSeats.includes(seatNumber)) {
-      setSelectedSeats(selectedSeats.filter((seat) => seat !== seatNumber));
+      // setSelectedSeats(selectedSeats.filter((seat) => seat !== seatNumber));
     } else {
       // setSelectedSeats([...selectedSeats, seatNumber]);
       setSelectedSeats([seatNumber]);
@@ -43,7 +43,6 @@ function BusSeatReservation({ isLowerDeck = true }) {
       setSelectedSeats([]);
     }
   }, [dispatch, tempSeat]);
-  console.log(reservedSeats, users, "allReserveseatsOnDate");
 
   return (
     <div className="flex justify-center items-center h-50 w-50">
