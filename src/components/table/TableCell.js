@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../table.css";
+import "./table.css";
 
 export const TableCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue();

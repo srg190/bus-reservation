@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 
 import steeringWheelImage from "../assets/images/steering-wheel.png";
-import { userActions } from "../redux/slices/userSlice";
+import { bookingActions } from "../redux/slices/bookingSlice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 
-function BusSeatReservation({ isLowerDeck = true }) {
-  const { setTempData, getAllReservedSeatesOfDate } = userActions;
+function BusSeatReservation({ isLowerDeck = true, selectedSeats = [], setSelectedSeats }) {
+  const { setTempData, getAllReservedSeatesOfDate } = bookingActions;
+  const [reservedSeats, setReservedSeats] = useState([]);
   const dispatch = useAppDispatch();
-  const { tempSeat, allReserveseatsOnDate, tempDate, users } = useAppSelector(
-    (state) => state.user
+  const { tempSeat, allReserveseatsOnDate, tempDate } = useAppSelector(
+    (state) => state.booking
   );
 
   const lowerDeckSeats = Array.from(
@@ -16,14 +17,9 @@ function BusSeatReservation({ isLowerDeck = true }) {
     (_, i) => i + 1 + (isLowerDeck ? 0 : 20)
   );
 
-  const [selectedSeats, setSelectedSeats] = useState([]);
-  const [reservedSeats, setReservedSeats] = useState([]);
-
   const toggleSeatSelection = (seatNumber) => {
     if (selectedSeats.includes(seatNumber)) {
-      // setSelectedSeats(selectedSeats.filter((seat) => seat !== seatNumber));
     } else {
-      // setSelectedSeats([...selectedSeats, seatNumber]);
       setSelectedSeats([seatNumber]);
     }
     dispatch(setTempData({ seat: seatNumber }));
@@ -45,7 +41,7 @@ function BusSeatReservation({ isLowerDeck = true }) {
   }, [dispatch, tempSeat]);
 
   return (
-    <div className="flex justify-center items-center h-50 w-50">
+    <div className="flex justify-center items-center  h-50 w-50">
       <div className="max-w-sm sm:max-w-2xl md:max-w-3xl lg:max-w-6xl mx-auto mt-8">
         <h2 className="text-xl font-bold mb-2">
           {isLowerDeck ? "Lower Deck" : "Upper Deck"}
@@ -65,7 +61,6 @@ function BusSeatReservation({ isLowerDeck = true }) {
             </>
           ) : null}
           <div className="flex flex-col sm: w-[15rem] md:w-[30rem] lg:w-[41rem]">
-            {/* Seats in a 2x5 grid */}
             <div className="flex flex-wrap mt-[1rem] ml-[1rem]">
               {lowerDeckSeats.slice(0, 12).map((seat, index) => (
                 <div
@@ -89,7 +84,6 @@ function BusSeatReservation({ isLowerDeck = true }) {
                 </div>
               ))}
             </div>
-            {/* Seats in a 1x5 grid */}
             <div className="flex flex-wrap mt-[1rem] ml-[1rem]">
               {lowerDeckSeats.slice(12).map((seat, index) => (
                 <div

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
-import { userActions } from "../redux/slices/userSlice";
+import { bookingActions } from "../redux/slices/bookingSlice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 
 const App = () => {
-  const { setTempData, clearTempData } = userActions;
-  const { tempDate } = useAppSelector((state) => state.user);
+  const { setTempData, clearTempData } = bookingActions;
+  const { tempDate } = useAppSelector((state) => state.booking);
   const dispatch = useAppDispatch();
 
   const [value, setValue] = useState({

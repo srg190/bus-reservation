@@ -1,27 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function DropdownMenu() {
+function DropdownMenu({ navItems = [] }) {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
-  const [currSelect, setCurrSelect] = useState('Dashboard')
-  const navItems = [
-    {
-      name: 'Dashboard',
-      route: '/'
-    },
-    {
-        name: 'Booking',
-        route: '/seat-booking'
-    },
-  ]
-  
-  const handleRoute =(route)=> {
+  const itemName = navItems.filter((item) => item?.route === location.pathname)[0];
+  const [currSelect, setCurrSelect] = useState(itemName.name);
+
+  const handleRoute = (item) => {
     setIsOpen(false);
-    setCurrSelect(route.name)
-    navigate(route.route);
-  }
-//   const navItems = ["Hello", "World"];
+    navigate(item?.route);
+    setCurrSelect(item?.name)
+  };
 
   return (
     <div className="relative inline-block text-left">
@@ -62,7 +53,7 @@ function DropdownMenu() {
               key={index}
               className="text-black hover:bg-primary hover:text-white px-2 py-2 cursor-pointer"
             >
-              {item.name}
+              {item?.name}
             </li>
           ))}
         </ul>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "../table.css";
 
 import {
   flexRender,
@@ -7,12 +6,11 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { columns } from "../table/Columns";
-import { useAppSelector } from "../redux/store";
+import { columns } from "../../components/table/Columns";
+import { useAppSelector } from "../../redux/store";
 
 export const Dashboard = () => {
-  const { users: bookingData } = useAppSelector((state) => state.user);
-  // const bookingData = useSelector((state) => state.user.users);
+  const { users: bookingData } = useAppSelector((state) => state.booking);
   const dashboard = Object.entries(bookingData).flatMap(
     ([dateOfBooking, seats]) => {
       return Object.entries(seats).map(([seatNumber, data]) => {

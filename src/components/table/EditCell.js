@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../redux/slices/userSlice";
-import { useAppSelector } from "../redux/store";
+import { bookingActions } from "../../redux/slices/bookingSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
 
 let rowData;
 
@@ -10,9 +9,8 @@ export const EditCell = ({ row, table }) => {
   const [deleteBooking, setDeleteBooking] = useState(false);
   const [dateError, setDateError] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const dispatch = useDispatch();
-  const { users: bookingData } = useAppSelector((state) => state.user);
-  // const bookingData = useSelector((state) => state.userReducer.users);
+  const dispatch = useAppDispatch();
+  const { users: bookingData } = useAppSelector((state) => state.booking);
   const meta = table.options.meta;
   const setEditedRows = (e) => {
     rowData = row.original;
@@ -68,7 +66,7 @@ export const EditCell = ({ row, table }) => {
         email: row.original.email,
       };
     }
-    dispatch(userActions.updateBooking(updatedData));
+    dispatch(bookingActions.updateBooking(updatedData));
 
     const elName = e.currentTarget.name;
     meta?.setEditedRows((old) => {
@@ -87,7 +85,7 @@ export const EditCell = ({ row, table }) => {
   const handleDelete = () => {
     setDeleteBooking(false);
     dispatch(
-      userActions.removeBooking({
+      bookingActions.removeBooking({
         dateOfBooking: row.original.dateOfBooking,
         seatNumber: row.original.seatNumber,
       })

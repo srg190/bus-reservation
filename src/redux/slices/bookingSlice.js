@@ -3,9 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   tempDate: "",
   tempSeat: "",
-  allDates: [],
   allReserveseatsOnDate: [],
-  changedId: 0,
   allComlumns: [],
   allData: [],
   users: {
@@ -102,8 +100,8 @@ const initialState = {
   },
 };
 
-const userSlice = createSlice({
-  name: "user",
+const bookingSlice = createSlice({
+  name: "booking",
   initialState,
   reducers: {
     reserveSeat: (state, action) => {
@@ -114,7 +112,6 @@ const userSlice = createSlice({
           [seatNumber]: {
             name,
             seatNumber,
-            birth: seatNumber > 20 ? "Upper" : "Lower",
             dateOfTravelling,
             email,
           },
@@ -124,7 +121,6 @@ const userSlice = createSlice({
           [seatNumber]: {
             name,
             seatNumber,
-            birth: seatNumber > 20 ? "Upper" : "Lower",
             dateOfTravelling,
             email,
           },
@@ -152,9 +148,6 @@ const userSlice = createSlice({
         if (Object.keys(state.users[action.payload.dateOfBooking]).length === 0)
           delete state.users[action.payload.dateOfBooking];
       }
-    },
-    getAllBookedDates: (state) => {
-      state.allDates = Object.keys(state.users);
     },
     getAllReservedSeatesOfDate: (state, action) => {
       const { dateOfTravelling } = action.payload;
@@ -207,5 +200,5 @@ const userSlice = createSlice({
   },
 });
 
-export const userActions = userSlice.actions;
-export default userSlice.reducer;
+export const bookingActions = bookingSlice.actions;
+export default bookingSlice.reducer;

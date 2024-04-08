@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import DatePicker from "react-tailwindcss-datepicker";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { useActionData } from "react-router-dom";
-import { userActions } from "../redux/slices/userSlice";
+import { bookingActions } from "../redux/slices/bookingSlice";
 
 const BusReservationForm = () => {
-  const { tempDate, tempSeat, users } = useAppSelector((state) => state.user);
+  const { tempDate, tempSeat, users } = useAppSelector((state) => state.booking);
   const { clearTempData, reserveSeat, getAllReservedSeatesOfDate } =
-    userActions;
+  bookingActions;
   const dispatch = useAppDispatch();
 
   const [isSelected, setIsSelected] = useState(false);
@@ -41,7 +39,6 @@ const BusReservationForm = () => {
       [name]: value,
     });
   };
-  // dispatch(getAllBookedDates());
   useEffect(() => {
     if (tempDate && tempSeat) {
       setFormData({
