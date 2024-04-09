@@ -4,7 +4,11 @@ import steeringWheelImage from "../assets/images/steering-wheel.png";
 import { bookingActions } from "../redux/slices/bookingSlice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 
-function BusSeatReservation({ isLowerDeck = true, selectedSeats = [], setSelectedSeats }) {
+function BusSeatReservation({
+  isLowerDeck = true,
+  selectedSeats = [],
+  setSelectedSeats,
+}) {
   const { setTempData, getAllReservedSeatesOfDate } = bookingActions;
   const [reservedSeats, setReservedSeats] = useState([]);
   const dispatch = useAppDispatch();
@@ -30,7 +34,7 @@ function BusSeatReservation({ isLowerDeck = true, selectedSeats = [], setSelecte
       dispatch(getAllReservedSeatesOfDate({ dateOfTravelling: tempDate }));
       setReservedSeats(allReserveseatsOnDate);
     } else {
-      setReservedSeats([])
+      setReservedSeats([]);
     }
   }, [dispatch, tempDate, JSON.stringify(allReserveseatsOnDate)]);
 
@@ -43,7 +47,7 @@ function BusSeatReservation({ isLowerDeck = true, selectedSeats = [], setSelecte
   return (
     <div className="flex justify-center items-center  h-50 w-50">
       <div className="max-w-sm sm:max-w-2xl md:max-w-3xl lg:max-w-6xl mx-auto mt-8">
-        <h2 className="text-xl font-bold mb-2">
+        <h2 data-testid="deck" className="text-xl font-bold mb-2">
           {isLowerDeck ? "Lower Deck" : "Upper Deck"}
         </h2>
         <div className="mr-4 flex bg-white shadow-lg mt-8">

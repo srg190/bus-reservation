@@ -18,6 +18,8 @@
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
     "react-tailwindcss-datepicker": "^1.6.6",
+    "react-toastify": "^10.0.5",
+    "redux-mock-store": "^1.5.4",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
     "sort-by": "^1.2.0",

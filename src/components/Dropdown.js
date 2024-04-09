@@ -5,13 +5,15 @@ function DropdownMenu({ navItems = [] }) {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const itemName = navItems.filter((item) => item?.route === location.pathname)[0];
+  const itemName = navItems.filter(
+    (item) => item?.route === location.pathname
+  )[0];
   const [currSelect, setCurrSelect] = useState(itemName.name);
 
   const handleRoute = (item) => {
     setIsOpen(false);
     navigate(item?.route);
-    setCurrSelect(item?.name)
+    setCurrSelect(item?.name);
   };
 
   return (
@@ -52,6 +54,7 @@ function DropdownMenu({ navItems = [] }) {
               onClick={() => handleRoute(item)}
               key={index}
               className="text-black hover:bg-primary hover:text-white px-2 py-2 cursor-pointer"
+              data-testid={`list-item-${item.name}`}
             >
               {item?.name}
             </li>

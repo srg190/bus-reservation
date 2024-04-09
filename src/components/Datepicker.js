@@ -3,7 +3,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import { bookingActions } from "../redux/slices/bookingSlice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 
-const App = () => {
+const DatePicker = () => {
   const { setTempData, clearTempData } = bookingActions;
   const { tempDate } = useAppSelector((state) => state.booking);
   const dispatch = useAppDispatch();
@@ -22,10 +22,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (!tempDate) setValue({
-      endDate: null,
-      startDate: null,
-    })
+    if (!tempDate)
+      setValue({
+        endDate: null,
+        startDate: null,
+      });
   }, [dispatch, tempDate]);
 
   return (
@@ -38,4 +39,4 @@ const App = () => {
     />
   );
 };
-export default App;
+export default DatePicker;

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { bookingActions } from "../redux/slices/bookingSlice";
 
 const BusReservationForm = () => {
-  const { tempDate, tempSeat, users } = useAppSelector((state) => state.booking);
+  const { tempDate, tempSeat, users } = useAppSelector(
+    (state) => state.booking
+  );
   const { clearTempData, reserveSeat, getAllReservedSeatesOfDate } =
-  bookingActions;
+    bookingActions;
   const dispatch = useAppDispatch();
 
   const [isSelected, setIsSelected] = useState(false);
@@ -29,6 +33,7 @@ const BusReservationForm = () => {
         dateOfTravelling: formData.date,
       })
     );
+    toast.success("Booking successful");
     dispatch(getAllReservedSeatesOfDate({ dateOfTravelling: "" }));
   };
 

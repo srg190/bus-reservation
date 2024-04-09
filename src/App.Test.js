@@ -1,18 +1,12 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import TestWrapper from "Test";
+import TestWrapper from "./TestWrapper";
 import { getConfig } from "@testing-library/react";
 
 console.log(getConfig());
 
-const customRender = (
-  ui,
-  RenderOptions
-) => { 
-  return render(ui, {
-    wrapper: TestWrapper,
-    ...RenderOptions,
-  });
+const customRender = (ui, options) => {
+  return render(ui, { wrapper: TestWrapper, ...options });
 };
 
 export * from "@testing-library/react";
