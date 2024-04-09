@@ -139,6 +139,9 @@ const bookingSlice = createSlice({
         delete state.users[dateOfBooking];
       state.currentPage = currentPage;
     },
+    updateCurrentPage: (state, action) => {
+      state.currentPage = action.payload
+    },
     updateBooking: (state, action) => {
       const { dateOfBooking, seatNumber, name, email } = action.payload;
       state.users[dateOfBooking] = {

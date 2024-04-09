@@ -95,7 +95,15 @@ const BusReservationForm = () => {
                             htmlFor="date"
                             className="block text-gray-700 font-medium mb-2"
                           >
-                            Date #: {tempDate}
+                            Date #:{" "}
+                            {new Date(tempDate.toLocaleString()).toLocaleString(
+                              "en",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              }
+                            )}
                           </label>
                         </div>
                         <div className="mb-4">

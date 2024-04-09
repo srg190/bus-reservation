@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Deck from "../../components/Deck";
 import DatePicker from "../../components/Datepicker";
 import BusReservationForm from "../../components/RegistrationFormModel";
-import Loader from "../../components/Loader";
 import { bookingActions } from "../../redux/slices/bookingSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 

@@ -7,7 +7,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { columns } from "../../components/table/Columns";
-import { useAppSelector } from "../../redux/store";
+import { useAppSelector, useAppDispatch } from "../../redux/store";
+import { bookingActions } from "../../redux/slices/bookingSlice";
 
 export const Dashboard = () => {
   const { users: bookingData, currentPage } = useAppSelector(
@@ -24,11 +25,12 @@ export const Dashboard = () => {
       });
     }
   );
+  const dispatch = useAppDispatch()
   const [data, setData] = useState(() => [...dashboard]);
   const [originalData, setOriginalData] = useState(() => [...dashboard]);
   const [editedRows, setEditedRows] = useState({});
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
+    pageIndex: currentPage,
     pageSize: 5,
   });
 
@@ -37,7 +39,11 @@ export const Dashboard = () => {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
+    onPaginationChange: ({ pageIndex }) =>
+      setPagination((prevState) => ({
+        ...prevState,
+        pageIndex: currentPage,
+      })),
     state: {
       pagination,
     },
@@ -69,12 +75,11 @@ export const Dashboard = () => {
     },
   });
   const gotoPage = (pageIndex) => {
-    table.setPagination({ pageIndex, pageSize: pagination.pageSize });
+    dispatch(bookingActions.updateCurrentPage(pageIndex))
   };
   useEffect(() => {
-    table.setPagination({ pageIndex: currentPage, pageSize: 5 });
     setData(dashboard);
-  }, [bookingData]);
+  }, [bookingData, currentPage]);
   console.log(pagination, "pagination");
 
   return (
