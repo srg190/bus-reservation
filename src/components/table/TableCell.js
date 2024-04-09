@@ -1,24 +1,25 @@
 import { useState, useEffect } from "react";
 import "./table.css";
+import { useAppSelector } from "../../redux/store";
 
 export const TableCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue();
   const columnMeta = column.columnDef.meta;
   const tableMeta = table.options.meta;
   const [value, setValue] = useState(initialValue);
-  const [error, setError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [dateError, setDateError] = useState(false);
+  const { users: bookingData, cancelButtonClicked } = useAppSelector(
+    (state) => state.booking
+  );
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const minDate = tomorrow.toISOString().split("T")[0];
-
   useEffect(() => {
     setValue(initialValue);
-  }, [initialValue]);
-
-  const onBlur = () => {
-    tableMeta?.updateData(row.index, column.id, value);
-  };
+    setEmailError(false);
+  }, [initialValue, cancelButtonClicked]);
 
   const onSelectChange = (e) => {
     setValue(e.target.value);
@@ -28,13 +29,38 @@ export const TableCell = ({ getValue, row, column, table }) => {
   const handleOnchange = (e) => {
     if (columnMeta?.type === "email") {
       const newVal = e.target.value;
-      const regex = /^[^\s@]+@[^\s@]+\.(?:com|org)$/i;
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!regex.test(newVal)) {
-        setError(true);
+        row.original.emailError = true;
+        setEmailError(true);
       } else {
-        setError(false);
+        row.original.emailError = false;
+        row.original.email = e.target.value;
+        setEmailError(false);
       }
     }
+    if (
+      columnMeta?.type === "date" &&
+      row.original.dateOfBooking !== e.target.value
+    ) {
+      const isBookingExists = bookingData[e.target.value]?.[
+        row.original.seatNumber
+      ]
+        ? true
+        : false;
+      if (isBookingExists) {
+        row.original.dateError = true;
+        setDateError(true);
+      } else {
+        row.original.dateError = false;
+        row.original.dateOfBooking = e.target.value;
+        setDateError(false);
+      }
+    } else {
+      row.original.dateError = false;
+      setDateError(false);
+    }
+    if (columnMeta?.type === "text") row.original.name = e.target.value;
     setValue(e.target.value);
   };
 
@@ -52,11 +78,17 @@ export const TableCell = ({ getValue, row, column, table }) => {
         <input
           value={value}
           onChange={handleOnchange}
-          onBlur={onBlur}
           type={columnMeta?.type || "text"}
           min={minDate}
         />
-        {error && <p className="!text-error text-xs">*Please enter a valid email</p>}
+        {emailError && (
+          <p className="!text-error text-xs">*Please enter a valid email</p>
+        )}
+        {dateError && (
+          <p className="!text-error text-xs">
+            Seat already booked for the selected date
+          </p>
+        )}
       </>
     );
   }

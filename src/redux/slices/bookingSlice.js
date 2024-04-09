@@ -6,6 +6,8 @@ const initialState = {
   allReserveseatsOnDate: [],
   allComlumns: [],
   allData: [],
+  currentPage: 0,
+  cancelButtonClicked: false,
   users: {
     "2024-04-07": {
       1: {
@@ -127,12 +129,15 @@ const bookingSlice = createSlice({
         };
       }
     },
+    updateCancelClick: (state, action) => {
+      state.cancelButtonClicked = !state.cancelButtonClicked;
+    },
     removeBooking: (state, action) => {
-      delete state.users[action.payload.dateOfBooking][
-        action.payload.seatNumber
-      ];
-      if (Object.keys(state.users[action.payload.dateOfBooking]).length === 0)
-        delete state.users[action.payload.dateOfBooking];
+      const { dateOfBooking, seatNumber, currentPage } = action.payload;
+      delete state.users[dateOfBooking][seatNumber];
+      if (Object.keys(state.users[dateOfBooking]).length === 0)
+        delete state.users[dateOfBooking];
+      state.currentPage = currentPage;
     },
     updateBooking: (state, action) => {
       const { dateOfBooking, seatNumber, name, email } = action.payload;

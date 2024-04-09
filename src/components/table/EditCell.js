@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { bookingActions } from "../../redux/slices/bookingSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { useAppDispatch } from "../../redux/store";
+import { toast } from "react-toastify";
 
 let rowData;
 
 export const EditCell = ({ row, table }) => {
   const [deleteBooking, setDeleteBooking] = useState(false);
-  const [dateError, setDateError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
   const dispatch = useAppDispatch();
-  const { users: bookingData } = useAppSelector((state) => state.booking);
   const meta = table.options.meta;
   const setEditedRows = (e) => {
     rowData = row.original;
     const elName = e.currentTarget.name;
+    if (elName === "cancel") {
+      dispatch(bookingActions.updateCancelClick());
+    }
     meta?.setEditedRows((old) => {
       return {
         ...old,
@@ -26,47 +27,25 @@ export const EditCell = ({ row, table }) => {
     }
   };
   const handleEdit = (e) => {
-    let updatedData;
-    const regex = /^[^\s@]+@[^\s@]+\.(?:com|org)$/i;
+    if (row.original.dateError || row.original.emailError) return;
+    let newData;
     if (rowData.dateOfBooking !== row.original.dateOfBooking) {
-      const isBookingExists = bookingData[row.original.dateOfBooking]?.[
-        row.original.seatNumber
-      ]
-        ? true
-        : false;
-      const isEmailInvalid = !regex.test(row.original.email) ? true : false;
-      setDateError(isBookingExists);
-      setEmailError(isEmailInvalid);
-      updatedData = {
-        dateOfBooking: isBookingExists
-          ? rowData.dateOfBooking
-          : row.original.dateOfBooking,
-        seatNumber: row.original.seatNumber,
-        name: row.original.name,
-        email: isEmailInvalid ? rowData.email : row.original.email,
-        ...(!isBookingExists && { oldDateOfBooking: rowData.dateOfBooking }),
-      };
-    } else if (rowData.email !== row.original.email) {
-      setDateError(false);
-      const isEmailInValid = !regex.test(row.original.email) ? true : false;
-      setEmailError(isEmailInValid);
-      updatedData = {
+      newData = {
         dateOfBooking: row.original.dateOfBooking,
         seatNumber: row.original.seatNumber,
         name: row.original.name,
-        email: isEmailInValid ? rowData.email : row.original.email,
+        email: row.original.email,
+        oldDateOfBooking: rowData.dateOfBooking,
       };
     } else {
-      setDateError(false);
-      setEmailError(false);
-      updatedData = {
+      newData = {
         dateOfBooking: row.original.dateOfBooking,
         seatNumber: row.original.seatNumber,
         name: row.original.name,
         email: row.original.email,
       };
     }
-    dispatch(bookingActions.updateBooking(updatedData));
+    dispatch(bookingActions.updateBooking(newData));
 
     const elName = e.currentTarget.name;
     meta?.setEditedRows((old) => {
@@ -78,6 +57,7 @@ export const EditCell = ({ row, table }) => {
     if (elName !== "edit") {
       meta?.revertData(row.index, e.currentTarget.name === "cancel");
     }
+    toast.success("Booking edited successfully");
   };
   const handleOnClick = () => {
     setDeleteBooking(!deleteBooking);
@@ -88,10 +68,13 @@ export const EditCell = ({ row, table }) => {
       bookingActions.removeBooking({
         dateOfBooking: row.original.dateOfBooking,
         seatNumber: row.original.seatNumber,
+        currentPage: table.getState().pagination.pageIndex,
       })
     );
+    toast.success("Booking deleted successfully");
   };
-
+  const isEditable =
+    new Date(row.original.dateOfBooking).getTime() >= Date.now();
   return (
     <>
       <div className="edit-cell-container">
@@ -100,13 +83,13 @@ export const EditCell = ({ row, table }) => {
             <button onClick={setEditedRows} name="cancel">
               X
             </button>{" "}
-            <button onClick={handleEdit} name="done">
+            <button onClick={(e) => handleEdit(e)} name="done">
               ✔
             </button>
           </div>
         ) : (
           <div className="flex items-center">
-            {new Date(row.original.dateOfBooking).getTime() >= Date.now() ? (
+            {isEditable ? (
               <button onClick={setEditedRows} name="edit">
                 ✐
               </button>
@@ -120,7 +103,7 @@ export const EditCell = ({ row, table }) => {
                   <h2 className="text-lg font-semibold mb-4">
                     Are you sure you want to delete?
                   </h2>
-                  <div className="flex justify-end">
+                  <div className="flex justify-center">
                     <button
                       className="px-4 py-2 mr-2 bg-red-500 text-white rounded hover:bg-red-600"
                       onClick={handleDelete}
@@ -139,15 +122,13 @@ export const EditCell = ({ row, table }) => {
               </div>
             ) : (
               <MdDelete
-                className="text-[#ffb918] text-lg cursor-pointer"
+                className="text-primary text-lg cursor-pointer "
                 onClick={handleOnClick}
               />
             )}
           </div>
         )}
       </div>
-      {dateError && <p className="!text-error text-xs">*Already Booked</p>}
-      {emailError && <p className="!text-error text-xs">*Email invalid</p>}
     </>
   );
 };

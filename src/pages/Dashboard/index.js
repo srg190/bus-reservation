@@ -10,7 +10,9 @@ import { columns } from "../../components/table/Columns";
 import { useAppSelector } from "../../redux/store";
 
 export const Dashboard = () => {
-  const { users: bookingData } = useAppSelector((state) => state.booking);
+  const { users: bookingData, currentPage } = useAppSelector(
+    (state) => state.booking
+  );
   const dashboard = Object.entries(bookingData).flatMap(
     ([dateOfBooking, seats]) => {
       return Object.entries(seats).map(([seatNumber, data]) => {
@@ -27,12 +29,8 @@ export const Dashboard = () => {
   const [editedRows, setEditedRows] = useState({});
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 8,
+    pageSize: 5,
   });
-
-  useEffect(() => {
-    setData(dashboard);
-  }, [bookingData]);
 
   const table = useReactTable({
     data,
@@ -48,11 +46,7 @@ export const Dashboard = () => {
       setEditedRows,
       revertData: (rowIndex, revert) => {
         if (revert) {
-          setData((old) =>
-            old.map((row, index) =>
-              index === rowIndex ? originalData[rowIndex] : row
-            )
-          );
+          return;
         } else {
           setOriginalData((old) =>
             old.map((row, index) => (index === rowIndex ? data[rowIndex] : row))
@@ -74,6 +68,14 @@ export const Dashboard = () => {
       },
     },
   });
+  const gotoPage = (pageIndex) => {
+    table.setPagination({ pageIndex, pageSize: pagination.pageSize });
+  };
+  useEffect(() => {
+    table.setPagination({ pageIndex: currentPage, pageSize: 5 });
+    setData(dashboard);
+  }, [bookingData]);
+  console.log(pagination, "pagination");
 
   return (
     <>
@@ -109,31 +111,45 @@ export const Dashboard = () => {
         </table>
         {/* <pre>{JSON.stringify(data, null, "\t")}</pre> */}
       </article>
-      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-        <button
-          onClick={() => table.firstPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {"<<"}
-        </button>
+      <div className="flex justify-center">
         <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="py-0 px-2"
         >
           {"<"}
         </button>
+        {Array.from({ length: table.getPageCount() }, (_, i) => {
+          return (
+            <button key={i} onClick={() => gotoPage(i)} className="py-0 px-2">
+              {i + 1}
+            </button>
+          );
+        })}
         <button
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {">"}
         </button>
-        <button
-          onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
+      </div>
+      <div className="flex justify-evenly">
+        <div>{`Page ${
+          pagination.pageIndex + 1
+        } of ${table.getPageCount()}`}</div>
+
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number(e.target.value));
+          }}
         >
-          {">>"}
-        </button>
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              {pageSize}
+            </option>
+          ))}
+        </select>
       </div>
     </>
   );

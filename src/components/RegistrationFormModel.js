@@ -5,9 +5,7 @@ import { useAppDispatch, useAppSelector } from "../redux/store";
 import { bookingActions } from "../redux/slices/bookingSlice";
 
 const BusReservationForm = () => {
-  const { tempDate, tempSeat, users } = useAppSelector(
-    (state) => state.booking
-  );
+  const { tempDate, tempSeat } = useAppSelector((state) => state.booking);
   const { clearTempData, reserveSeat, getAllReservedSeatesOfDate } =
     bookingActions;
   const dispatch = useAppDispatch();
